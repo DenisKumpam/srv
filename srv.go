@@ -11,8 +11,11 @@ func hello(w http.ResponseWriter, req *http.Request)  {
 }
 
 func readFile(w http.ResponseWriter, req *http.Request)  {
-	text := os.ReadFile("file.txt")
-	fmt.Fprintf(w, text,"\n")
+	text, err := os.ReadFile("file.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Fprintf(w, string(text),"\n")
 }
 
 func headers(w http.ResponseWriter, req *http.Request)  {
@@ -25,6 +28,7 @@ func headers(w http.ResponseWriter, req *http.Request)  {
 func main() {
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
+	http.HandleFunc("/readFile", readFile)
 
 	http.ListenAndServe(":8090", nil)
 }
